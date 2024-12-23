@@ -5,6 +5,7 @@
 
 <div class="container">
 
+
     <!-- Navbar for Categories -->
     <nav class="navbar navbar-light navbar-custom">
         <div class="container-fluid">
@@ -25,16 +26,18 @@
                         </li>
                     @endforeach
                 </ul>
-                <!-- Search bar with icon -->
-                <form class="d-flex ms-lg-auto mt-3 mt-lg-0" id="search-form">
-                    <input class="form-control me-2" type="search" id="search-input" placeholder="Search">
-                    <button class="btn btn-outline-secondary" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
+               
             </div>
         </div>
     </nav>
+    <nav class="navbar search">
+    <div class="container-fluid">
+        <form class="d-flex position-relative" role="search" method="GET" action="{{ route('products.search') }}">
+            <input class="form-control me-2" type="search" name="query" placeholder="Search" aria-label="Search" autocomplete="off" value="{{ request('query') }}">
+            <button class="btn" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
 
     <br>
 
@@ -91,7 +94,7 @@
     <!-- Button to scroll back to the top of the page -->
     <button id="goTopBtn" class="go-top"><i class="fas fa-arrow-up"></i></button>
 </div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     // Toggle the visibility of full description
     function toggleDescription(productId) {
@@ -106,6 +109,64 @@
             shortDescription.classList.remove('d-none');
         }
     }
+    //search bar
+    $(document).ready(function() {
+        $('#search-bar').on('keyup', function() {
+            let query = $(this).val().trim();
+            
+            if (query.length > 2) {
+                $.ajax({
+                    url: '{{ route("products.search") }}', // Your search endpoint
+                    method: 'GET',
+                    data: { query: query },
+                    success: function(response) {
+                        console.log(response); // Log response to debug
+                        
+                        $('#search-results').empty(); // Clear previous results
+
+                        if (response.length > 0) {
+                            response.forEach(function(item) {
+                                $('#search-results').append(`
+                                    <a href="#" class="dropdown-item result-item" data-id="${item.id}">
+                                        ${item.name} - ${item.category}
+                                    </a>
+                                `);
+                            });
+
+                            $('#search-results').show(); // Show dropdown
+                        } else {
+                            $('#search-results').hide(); // Hide if no results
+                        }
+                    }
+                });
+            } else {
+                $('#search-results').hide(); // Hide dropdown if query is short
+            }
+        });
+
+        $(document).on('click', '.result-item', function() {
+            let selectedText = $(this).text();
+            $('#search-bar').val(selectedText);  // Populate the search bar with selected result
+            $('#search-results').hide();  // Hide dropdown
+        });
+    });
+
 </script>
+<style>
+    #search-results {
+        max-height: 300px;
+        overflow-y: auto;
+        z-index: 1000;
+    }
+
+    .result-item {
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .result-item:hover {
+        background-color: #f1f1f1;
+    }
+</style>
 
 @endsection
