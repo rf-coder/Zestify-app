@@ -4,47 +4,40 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class RegisteredUserController extends Controller
 {
-    /**
-     * Display the registration view.
-     */
-    public function create(): View
+    // Show the registration form
+    public function create()
     {
-        return view('auth.register');
+        return view('register');
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function store(Request $request): RedirectResponse
+    // Handle the registration of new users
+    public function store(Request $request)
     {
+        // Validate incoming data
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'], // Ensure password is confirmed
         ]);
 
+        // Create the user with 'user' role by default
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($request->password), // Hash the password
+            'role' => 'user', // Assign 'user' role by default
         ]);
 
-        event(new Registered($user));
-
+        // Log the user in immediately after registration
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // Redirect to the appropriate page (e.g., products or home page)
+        return redirect()->route('home');
     }
 }

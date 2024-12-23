@@ -1,0 +1,231 @@
+.hero {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+.hero-image {
+    width: 100%; /* Make it full width */
+    height: 400px; /* Adjust height as needed */
+    overflow: hidden; /* Ensure no overflow */
+}
+
+.hero-image img {
+    width: 100%; /* Image takes full width of the container */
+    height: 100%; /* Image takes full height of the container */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+}
+
+.hero-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: black;
+}
+
+.featured-products {
+    padding: 20px;
+    text-align: center;
+}
+
+.product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.product-card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    border-radius: 8px;
+    width: 200px;
+}
+
+.product-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #f5a623;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background-color: #e59400;
+}
+
+
+
+header {
+    position: relative; /* Allows absolute positioning of the logo */
+}
+
+nav {
+    padding: 15px; /* Add some padding to the nav */
+}
+
+.nav {
+    margin-left: auto; /* Pushes the nav to the left */
+}
+
+.logo {
+    position: absolute; /* Position logo absolutely within header */
+    left: 15px; /* Distance from the right edge */
+    top: 15px; /* Distance from the top edge */
+    z-index: 10; /* Ensure logo appears above other elements */
+}
+
+.logo {
+    display: flex; /* Aligns items in a row */
+    align-items: center; /* Centers items vertically */
+}
+
+.logo-text {
+    font-size: 24px;
+    font-weight: bold; 
+    color: #333;
+    padding-left: 5px;
+}
+
+/* Add some padding for the logo image */
+.logo-img {
+    width: 50px; 
+    height: 50px;
+    border-radius: 50%; 
+    object-fit: cover; 
+}
+
+/* Contact Section Styles */
+
+
+.contact-section {
+    background-color: #fff; /* White background for form area */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    padding: 40px; /* Padding for the content */
+}
+
+.contact-info {
+    margin-bottom: 20px;
+    color: #333; /* Dark text for readability */
+    font-weight: bold; /* Bold text for emphasis */
+}
+
+
+
+.form-group {
+    margin-bottom: 1.5rem; /* Spacing between form elements */
+}
+
+label {
+    font-weight: 600; /* Semi-bold labels */
+    color: #555; /* Medium-dark text color */
+}
+
+.form-control {
+    border: 1px solid #ced4da; /* Light border color */
+    border-radius: 4px; /* Slightly rounded corners */
+    box-shadow: none; /* Remove default box shadow */
+    transition: border-color 0.3s; /* Transition effect */
+}
+
+.form-control:focus {
+    border-color: #007bff; /* Primary color on focus */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Box shadow on focus */
+}
+
+.btn-primary {
+    background-color: #007bff; /* Primary button color */
+    border-color: #007bff; /* Matching border */
+    font-weight: 600; /* Bold button text */
+    padding: 10px 20px; /* Padding for the button */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+    border-color: #0056b3; /* Matching border on hover */
+}
+
+.map {
+    width: 100%; /* Full width for the map */
+    height: 300px; /* Fixed height for the map */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    margin-top: 20px; /* Space above the map */
+}
+
+/* go to top button*/
+.go-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none; /* Initially hidden */
+    background-color: #E3BFC6;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    z-index: 1000; /* Ensures it appears above other elements */
+    
+}
+
+.go-top:hover {
+    background-color:rgb(232, 19, 232);
+}
+
+/* Ensuring no overflow of content */
+header {
+    width: 100%;
+    overflow: hidden;
+}
+
+/* On smaller screens, adjust the logo and nav layout */
+@media (max-width: 768px) {
+    .nav {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        padding-left: 0;
+    }
+
+    .nav-item {
+        margin-bottom: 10px; /* Space between links */
+    }
+
+    .logo {
+        margin-right: 0;
+        justify-content: center;
+        width: 100%; /* Ensures logo stays centered */
+    }
+
+    .logo-text {
+        font-size: 1.5rem; /* Adjust logo text size for smaller screens */
+    }
+}
+
+/* Optional: Space out the nav items */
+.nav-link {
+    padding: 0 15px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 130%;
+}
+
+.navbar-custom {
+    background-color: #E3BFC6;
+}
+
+
+.logo {
+    text-decoration: none !important; /* Removes underline for the entire link */
+}
+

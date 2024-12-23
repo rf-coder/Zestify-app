@@ -9,39 +9,43 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
+
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     */
-    public function create(): View
+    public function create()
     {
-        return view('auth.login');
+        return view('main');  // The view where the login form will be displayed
     }
-
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(Request $request)
     {
-        $request->authenticate();
+        $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
+        ]);
 
-        $request->session()->regenerate();
+        if (Auth::attempt($request->only('email', 'password'))) {
+            // Check if the user is an admin
+            if(auth()->user()->email == 'admin@example.com'){
+                return redirect()->route('admin.dashboard');
+            } else {
+                return redirect()->route('home');
+            }
+            
+        }
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        // If login fails
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
+        
     }
-
-    /**
-     * Destroy an authenticated session.
-     */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
+        Auth::logout();  // Log out the user
 
-        $request->session()->invalidate();
+        $request->session()->invalidate();  // Invalidate the session
+        $request->session()->regenerateToken();  // Regenerate CSRF token
 
-        $request->session()->regenerateToken();
-
-        return redirect('/');
+        return redirect('/');  // Redirect to the home page or login page
     }
 }

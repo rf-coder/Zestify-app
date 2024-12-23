@@ -1,29 +1,44 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
-                </div>
-            </div>
+@section('title', 'Order Details')
 
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
-                </div>
-            </div>
+@section('content')
+<div class="container mt-4">
+    <h1>Order Details</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Order #{{ $order->id }}</h5>
+            <p><strong>Order Date:</strong> {{ $order->created_at->format('d M, Y') }}</p>
+            <p><strong>Customer Name:</strong> {{ $order->customer_name }}</p>
+            <p><strong>Customer Email:</strong> {{ $order->customer_email }}</p>
+            <p><strong>Total Amount:</strong> ${{ number_format($order->total_amount, 2) }}</p>
         </div>
     </div>
-</x-app-layout>
+
+    <h3 class="mt-4">Order Items</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($order->items as $item)
+            <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $item->product_name }}</td>
+                <td>{{ $item->quantity }}</td>
+                <td>${{ number_format($item->price, 2) }}</td>
+                <td>${{ number_format($item->quantity * $item->price, 2) }}</td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <a href="{{ route('admin.orders.index') }}" class="btn btn-primary mt-3">Back to Orders</a>
+</div>
+@endsection
