@@ -29,22 +29,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="{{ asset('js/script.js') }}"></script>
-    <script>
-    $(document).ready(function() {
-        $('#search-form').on('submit', function(e) {
-            e.preventDefault();
-            var query = $('#search-input').val();
-            $.ajax({
-                url: '{{ route('products.search') }}',
-                method: 'GET',
-                data: { query: query },
-                success: function(response) {
-                    $('#product-list').html(response);
-                }
-            });
-        });
-    });
-</script>
+    
 
 </body>
 </html>
