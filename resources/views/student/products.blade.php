@@ -5,7 +5,6 @@
 
 <div class="container">
 
-
     <!-- Navbar for Categories -->
     <nav class="navbar navbar-light navbar-custom">
         <div class="container-fluid">
@@ -26,18 +25,21 @@
                         </li>
                     @endforeach
                 </ul>
-               
             </div>
         </div>
     </nav>
+
     <nav class="navbar search">
-    <div class="container-fluid">
-        <form class="d-flex position-relative" role="search" method="GET" action="{{ route('products.search') }}">
-            <input class="form-control me-2" type="search" name="query" placeholder="Search" aria-label="Search" autocomplete="off" value="{{ request('query') }}">
-            <button class="btn" type="submit">Search</button>
-        </form>
-    </div>
-</nav>
+        <div class="container-fluid">
+            <form class="d-flex position-relative" role="search" method="GET" action="{{ route('products.search') }}">
+                <input class="form-control me-2" type="search" id="search-bar" name="query" placeholder="Search" aria-label="Search" autocomplete="off" value="{{ request('query') }}">
+                <button class="btn" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+            <div id="products" class="row mt-0">
+                <!-- Results will be displayed here dynamically -->
+            </div>
 
     <br>
 
@@ -53,10 +55,7 @@
 
     <!-- Product Sections -->
     <section id="all-products" class="my-5">
-        
-       
-
-        <div class="row">
+        <div id="products-container" class="row">
             @forelse ($products as $product)
                 <div class="col-md-4 mb-4">
                     <div class="card">
@@ -64,7 +63,6 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ $product->name }}</h5>
                             <p class="card-text">Rs. {{ $product->price }}/-</p>
-                            <!-- Display truncated description -->
                             <p class="card-text" id="description-{{ $product->id }}">
                                 {{ Str::limit($product->description, 100) }} 
                                 <a href="javascript:void(0);" class="text-decoration-none" onclick="toggleDescription({{ $product->id }})">Read More</a>
@@ -74,11 +72,11 @@
                                 <a href="javascript:void(0);" class="text-decoration-none" onclick="toggleDescription({{ $product->id }})">Read Less</a>
                             </p>
                             <form method="POST" action="{{ route('cart.add', $product->id) }}">
-    @csrf
-    <button type="submit" class="btn btn-primary w-100 d-flex align-items-center">
-        <i class="fas fa-shopping-cart me-2"></i>Add to Cart
-    </button>
-</form><br>
+                                @csrf
+                                <button type="submit" class="btn btn-primary w-100 d-flex align-items-center">
+                                    <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                                </button>
+                            </form><br>
                             <a href="{{ route('product-detail', $product->id) }}" class="btn btn-secondary d-flex align-items-center">
                                 <i class="fas fa-eye me-2"></i> View Product
                             </a>
@@ -94,6 +92,7 @@
     <!-- Button to scroll back to the top of the page -->
     <button id="goTopBtn" class="go-top"><i class="fas fa-arrow-up"></i></button>
 </div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     // Toggle the visibility of full description
@@ -109,49 +108,41 @@
             shortDescription.classList.remove('d-none');
         }
     }
-    //search bar
-    $(document).ready(function() {
-        $('#search-bar').on('keyup', function() {
-            let query = $(this).val().trim();
-            
-            if (query.length > 2) {
-                $.ajax({
-                    url: '{{ route("products.search") }}', // Your search endpoint
-                    method: 'GET',
-                    data: { query: query },
-                    success: function(response) {
-                        console.log(response); // Log response to debug
-                        
-                        $('#search-results').empty(); // Clear previous results
 
-                        if (response.length > 0) {
-                            response.forEach(function(item) {
-                                $('#search-results').append(`
-                                    <a href="#" class="dropdown-item result-item" data-id="${item.id}">
-                                        ${item.name} - ${item.category}
-                                    </a>
-                                `);
-                            });
+    
 
-                            $('#search-results').show(); // Show dropdown
-                        } else {
-                            $('#search-results').hide(); // Hide if no results
-                        }
-                    }
-                });
-            } else {
-                $('#search-results').hide(); // Hide dropdown if query is short
-            }
-        });
 
-        $(document).on('click', '.result-item', function() {
-            let selectedText = $(this).text();
-            $('#search-bar').val(selectedText);  // Populate the search bar with selected result
-            $('#search-results').hide();  // Hide dropdown
-        });
-    });
+
 
 </script>
+
+@push('scripts')
+        <script>
+            $(document).ready(function() {
+                $('#search-bar').on('keyup', function() {
+                    let query = $(this).val();
+                    if (query.length > 0) {
+                        // Perform the AJAX request
+                        $.ajax({
+                            url: '/search',
+                            method: 'GET',
+                            data: { query: query },
+                            success: function(response) {
+                                // Update the results section with the response
+                                $('#products').html(response);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error:', error);
+                            }
+                        });
+                    } else {
+                        $('#products').empty();
+                    }
+                });
+            });
+        </script>
+    @endpush
+
 <style>
     #search-results {
         max-height: 300px;
