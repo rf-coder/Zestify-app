@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SearchController;
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -97,7 +98,8 @@ Route::get('products', [ProductController::class, 'index'])->name('products');
 Route::get('products/category/{categoryName}', [ProductController::class, 'category'])->name('products.category');
 
 Route::get('products/{id}', [ProductController::class, 'show'])->name('product-detail');
-Route::get('products/search', [ProductController::class, 'search'])->name('products.search');
+Route::get('/search', [SearchController::class, 'search'])->name('products.search');
+
 
 // Cart Routes
 Route::get('cart', [CartController::class, 'index'])->name('cart');
